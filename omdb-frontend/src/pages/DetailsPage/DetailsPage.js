@@ -1,4 +1,4 @@
-import React,{ useState } from 'react';
+import React,{ useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -15,17 +15,20 @@ export default function DetailsPage() {
      */
     const [ details , setDetails ] = useState({});
 
-    const getSuccess = (res) => {
-        // Data validation before setting searchResult
-        if (res && res.data instanceof Object) {
-          setDetails(res.data);
-        }
-      }
     const uri = `${baseUrl}omdb/imdb/${params.imdbID}`;
+
+    const onSubmitSuccess = (res) => {
+      // Data validation before setting searchResult
+      if (res && res.data instanceof Object) {
+        setDetails(res.data);
+      }
+    }
+
+    useEffect(()=>{
     axios.get(uri, axiosHeaders)
-      .then(res => getSuccess(res))
+      .then(res => onSubmitSuccess(res))
       .catch(err => console.error(err));
-    
+    },[]);
 
 
      return (
